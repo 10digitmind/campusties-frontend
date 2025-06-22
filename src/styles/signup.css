@@ -1,0 +1,98 @@
+:root {
+  --black: #121212;
+  --white: #ffffff;
+  --gold: #d4af37;
+  --gold-dark: #bfa237;
+}
+
+.signup-container {
+  background: var(--black);
+  color: var(--white);
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 30px 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.1);
+}
+
+.signup-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: var(--gold);
+  font-size: 1.8rem;
+}
+
+.signup-form input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border: 1px solid var(--gold-dark);
+  border-radius: 6px;
+  background: #1f1f1f;
+  color: var(--white);
+  font-size: 1rem;
+}
+
+.password-field {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--gold);
+  user-select: none;
+}
+
+.password-strength {
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+.password-strength.weak {
+  color: red;
+}
+.password-strength.moderate {
+  color: orange;
+}
+.password-strength.strong {
+  color: limegreen;
+}
+
+.btn-auth {
+  width: 100%;
+  padding: 12px;
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.btn-auth:hover {
+  background: var(--gold-dark);
+}
+
+.signup-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.95rem;
+}
+.signup-footer span {
+  color: var(--gold);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .signup-container {
+    margin: 50px 15px;
+    padding: 25px 15px;
+  }
+}

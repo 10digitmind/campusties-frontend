@@ -1,0 +1,83 @@
+:root {
+    --primary-black: #000;
+    --primary-white: #fff;
+    --primary-gold: #d4af37;
+    --text-muted: #888;
+  }
+  
+  .filter-container {
+    background-color: var(--primary-white);
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+    color: var(--primary-black);
+    overflow: hidden;
+  }
+  
+  .filter-toggle {
+    background-color: var(--primary-gold);
+    color: var(--primary-white);
+    padding: 0.75rem 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  
+  .filter-toggle:hover {
+    background-color: #bfa134;
+  }
+  
+  .filter-body {
+    padding: 1.5rem;
+  }
+  
+  .filter-group {
+    margin-bottom: 1rem;
+  }
+  
+  .filter-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+  }
+  
+  .filter-group select,
+  .filter-group input {
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    font-size: 1rem;
+  }
+  
+  .filter-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  
+  .filter-checkboxes label {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+  }
+  
+  .apply-button {
+    background-color: var(--primary-gold);
+    color: var(--primary-white);
+    border: none;
+    padding: 0.7rem 1.5rem;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .apply-button:hover {
+    background-color: #bfa134;
+  }
+  

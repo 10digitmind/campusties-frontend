@@ -1,0 +1,120 @@
+.hero {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background-color: #0f0f0f;
+  color: white;
+  text-align: center;
+}
+
+.hero-content {
+  max-width: 100%;
+  margin-top: 30px;
+}
+
+.hero-content h1 {
+  font-size: 36px;
+  font-weight: 700;
+  color: gold;
+  margin-bottom: 20px;
+}
+
+.hero-content p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #ccc;
+  margin-bottom: 25px;
+  padding: 0 10px;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 24px;
+  width: 90%;
+  max-width: 300px;
+  font-size: 16px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: gold;
+  color: black;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #e5c100;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 2px solid gold;
+  color: gold;
+}
+
+.btn-secondary:hover {
+  background-color: gold;
+  color: black;
+}
+
+.hero-image img {
+  width: 100%;
+max-width: 350px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+}
+
+/* Desktop styles */
+@media screen and (min-width: 768px) {
+  .hero {
+    flex-direction: row;
+    text-align: left;
+    padding: 80px 60px;
+  }
+
+  .hero-content {
+    flex: 1;
+    max-width: 600px;
+    margin-top: 0;
+  }
+
+  .hero-content h1 {
+    font-size: 48px;
+  }
+
+  .hero-content p {
+    font-size: 18px;
+  }
+
+  .hero-buttons {
+    flex-direction: row;
+    justify-content: start;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: auto;
+  }
+
+  .hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-image img{
+    width: 300px;
+  }
+}

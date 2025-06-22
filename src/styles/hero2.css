@@ -1,0 +1,105 @@
+:root {
+    --black: #121212;
+    --white: #ffffff;
+    --gold: #d4af37;
+    --gold-dark: #bfa237;
+  }
+  
+  .hero-section2 {
+    display: flex;
+    background: var(--black);
+    color: var(--white);
+    padding: 60px 20px;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+height: auto;
+flex-direction: row-reverse;
+  }
+  
+  .hero-left {
+    flex: 1;
+    max-width: 600px;
+  }
+  
+  .hero-right {
+    flex: 1;
+    max-width: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  
+  .testimonial-image {
+    width: 100%;
+    max-width: 400px;
+    height: 350px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+    object-fit: cover;
+    transition: opacity 1s ease-in-out;
+    filter: brightness(0.85);
+    border: 3px solid var(--gold);
+  }
+  
+  /* Keep existing .testimonial styles but left align text */
+  .testimonials-carousel {
+    position: relative;
+    margin-top: 40px;
+    min-height: 80px; /* reserve enough height */
+    /* optionally add padding if you want space */
+  }
+  
+  .testimonial {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    font-style: italic;
+    color: #ccc;
+    font-size: 1rem;
+    text-align: left;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    pointer-events: none; /* so only active testimonial can be interacted with */
+   
+  }
+  
+  .testimonial.active {
+    opacity: 1;
+    position: relative;
+    pointer-events: auto;
+  }
+
+  .hero-social-proof{
+    margin-top: 20px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .hero-section2 {
+      flex-direction: column-reverse ;
+      text-align: center;
+    }
+    .hero-left,
+    .hero-right {
+      max-width: 100%;
+    }
+    .hero-right {
+      margin-top: 40px;
+    }
+    .testimonial-image {
+      max-width: 300px;
+      border-radius: 16px;
+    }
+    .testimonial {
+      text-align: center;
+      position: relative;
+    }
+  
+  }
+  

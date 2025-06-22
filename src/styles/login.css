@@ -1,0 +1,111 @@
+:root {
+  --black: #121212;
+  --white: #ffffff;
+  --gold: #d4af37;
+  --gold-dark: #bfa237;
+  --input-bg: #1e1e1e;
+  --gray: #999;
+}
+
+.login-page {
+  background-color: var(--black);
+  color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  min-height: 100vh;
+}
+
+.login-card {
+  background-color: var(--input-bg);
+  border: 1px solid var(--gold-dark);
+  border-radius: 16px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+.login-card h2 {
+  color: var(--gold);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.login-card label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: var(--white);
+}
+
+.login-card input {
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #2a2a2a;
+  color: var(--white);
+  margin-bottom: 16px;
+  font-size: 1rem;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--gold);
+  font-size: 1rem;
+}
+
+.login-card .forgot-password {
+  text-align: right;
+  font-size: 0.85rem;
+  margin-bottom: 20px;
+  color: var(--gray);
+}
+
+.login-card .forgot-password a,
+.login-card .signup-link a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.login-card button {
+  background-color: var(--gold);
+  color: var(--black);
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+
+.login-card button:hover {
+  background-color: var(--gold-dark);
+}
+
+.signup-link {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 20px;
+  }
+}

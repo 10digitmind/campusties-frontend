@@ -1,0 +1,160 @@
+:root {
+  --primary-black: #000;
+  --primary-white: #fff;
+  --primary-gold: #d4af37;
+  --text-muted: #666;
+  --like-hover: #f5f5f5;
+}
+
+.explore-container {
+  padding: 2rem;
+  text-align: center;
+  background-color: var( --primary-black);
+  color: var(--primary-black);
+}
+
+.explore-container h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-white);
+  margin-bottom: 1rem;
+}
+
+.students-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.student-card {
+  background: var(--primary-white);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  position: relative;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+
+.student-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+.student-image {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.student-image img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid var(--primary-gold);
+}
+
+.status-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-white);
+}
+
+.status-badge.online {
+  background-color: #4caf50;
+}
+
+.status-badge.offline {
+  background-color: #999;
+}
+
+.subscribed-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--primary-gold);
+  color: var(--primary-white);
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.student-info h3 {
+  margin: 0.4rem 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--primary-black);
+}
+
+.student-info p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.like-button {
+  margin-top: 1rem;
+  padding: 0.5rem 1.2rem;
+  border: 2px solid var(--primary-black);
+  background-color: transparent;
+  color: var(--primary-black);
+  border-radius: 30px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.like-button:hover {
+  background-color: var(--like-hover);
+}
+
+.like-button.liked {
+  background-color: var(--primary-gold);
+  color: var(--primary-white);
+  border-color: var(--primary-gold);
+  font-weight: bold;
+}
+@media screen and (max-width: 768px) {
+  .students-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .student-card {
+    padding: 1rem;
+  }
+
+  .student-image img {
+    height: 200px;
+  }
+
+  .student-info h3 {
+    font-size: 1rem;
+  }
+
+  .student-info p {
+    font-size: 0.85rem;
+  }
+
+  .like-button {
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+.loading-con{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background-color: rgb(29, 27, 27);
+  height: 10vh;
+}
