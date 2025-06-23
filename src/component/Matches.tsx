@@ -1,9 +1,11 @@
 import React from 'react';
 import { useAppSelector } from '../store/hook';
 import { useNavigate } from 'react-router-dom';
+import { useRequireAuth } from './Utility/requireAuth';
  // assuming you already use this
 
 const Matches: React.FC = () => {
+    useRequireAuth()
 const matches = useAppSelector((state) => state.user.matches);
   const loading = useAppSelector((state) => state.user.loading);
   const navigate = useNavigate();

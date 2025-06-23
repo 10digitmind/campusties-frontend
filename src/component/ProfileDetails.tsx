@@ -26,8 +26,9 @@ const INTEREST_OPTIONS = [
   "Science"
 ];
 
-
+const API_URL =process.env.REACT_APP_BACKEND_URL;
 const ProfileDetails = () => {
+  useRequireAuth()
   const [user, setUser] = useState<UserData | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [selectedProfilePhotoFile, setSelectedProfilePhotoFile] = useState<File | null>(null);
@@ -79,13 +80,13 @@ const ProfileDetails = () => {
 
       // Upload new profile photo
       if (selectedProfilePhotoFile) {
-        const { data } = await axios.get("http://localhost:5000/api/imagekit-auth");
+        const { data } = await axios.get(`${API_URL}/imagekit-auth`);
         const { token, expire, signature } = data;
 
         const form = new FormData();
         form.append("file", selectedProfilePhotoFile);
         form.append("fileName", `${user._id}-profile-photo`);
-        form.append("publicKey", 'public_rlKOhbCJ9qz2TEcZnva5f70EwOo=');
+        form.append("publicKey", `${process.env.REACT_APP_IMAGE_KEY}`);
         form.append("signature", signature);
         form.append("expire", expire);
         form.append("token", token);
@@ -104,13 +105,13 @@ const ProfileDetails = () => {
       const newGalleryPhotos: string[] = [];
 
       for (const newUplaod of newPhotos ) {
-        const { data } = await axios.get("http://localhost:5000/api/imagekit-auth");
+        const { data } = await axios.get(`${API_URL}/imagekit-auth`);
         const { token, expire, signature } = data;
 
         const form = new FormData();
         form.append("file", newUplaod);
         form.append("fileName", `${user._id}-gallery-${Date.now()}`);
-        form.append("publicKey", 'public_rlKOhbCJ9qz2TEcZnva5f70EwOo=');
+        form.append("publicKey",`${process.env.REACT_APP_IMAGE_KEY}`);
         form.append("signature", signature);
         form.append("expire", expire);
         form.append("token", token);
@@ -160,7 +161,7 @@ const ProfileDetails = () => {
       };
       const token = localStorage.getItem('token')
       await axios.put(
-        'http://localhost:5000/api/updateuser',
+        `${API_URL}/updateuser`,
         updatedUserData,
         {
           headers: {

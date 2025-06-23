@@ -3,6 +3,8 @@ import axios from 'axios';
 import { UserData } from './AppTypes/User';
 import { useParams } from 'react-router-dom';
 import '../styles/viewprofile.css'
+import useRedirectIfAuthenticated from './Utility/useRedirectIfAuthenticated';
+import { useRequireAuth } from './Utility/requireAuth';
 
 const calculateAge = (dob: string | Date | undefined | null): number | null => {
     if (!dob) return null;
@@ -18,9 +20,10 @@ const calculateAge = (dob: string | Date | undefined | null): number | null => {
 
   const token = localStorage.getItem('token')
 
-
+  const API_URL =process.env.REACT_APP_BACKEND_URL;
   
   const ViewUserProfile = () => {
+    useRequireAuth()
   const [user, setUser] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalPhoto, setModalPhoto] = useState<string | null>(null);
@@ -47,7 +50,7 @@ const calculateAge = (dob: string | Date | undefined | null): number | null => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/view-user-profile/${id}`);
+        const res = await axios.get(`${API_URL}/view-user-profile/${id}`);
         setUser(res.data);
       } catch (error) {
         console.error("Failed to load profile", error);
@@ -64,7 +67,7 @@ const calculateAge = (dob: string | Date | undefined | null): number | null => {
     const profileView = async () => {
       try {
         const res = await axios.post(
-          `http://localhost:5000/api/create-profile-viewers/${id}`,
+          `${API_URL}/create-profile-viewers/${id}`,
           {}, // empty body since you don't seem to send any data
           {
             headers: {

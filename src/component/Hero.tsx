@@ -1,14 +1,14 @@
-import React,{useRef,useEffect}from 'react';
+import React from 'react';
 import '../styles/hero.css';
 import { useNavigate } from 'react-router-dom';
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from 'react-intersection-observer';
-
+import { useAppSelector ,useAppDispatch} from '../store/hook'; 
 
 const Hero = () => {
     const navigate = useNavigate();
     const controls = useAnimation();
-  
+    const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
     // Set up intersection observer hook
     const [ref, inView] = useInView({
       triggerOnce: true,      // only trigger once
@@ -41,7 +41,10 @@ const Hero = () => {
     };
   
     return (
-      <section ref={ref} className="hero" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+     <div>
+
+
+      {isAuthenticated?'':<section ref={ref} className="hero" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <motion.div
           className="hero-content"
           variants={containerVariants}
@@ -66,7 +69,8 @@ const Hero = () => {
             style={{ width: '100%', borderRadius: '10px', objectFit: 'cover' }}
           />
         </motion.div>
-      </section>
+      </section>}
+      </div>
     );
   };
   

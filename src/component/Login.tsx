@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hook'; 
 import { loginUser,getUser,getUserILiked,getUsersWhoLikedMe,fetchMatches} from '../Redux/Slices/Thunks/userThunks'; 
 import '../styles/login.css';
 import { toast } from 'react-toastify';
+import { useRequireAuth } from './Utility/requireAuth';
+import useRedirectIfAuthenticated from './Utility/useRedirectIfAuthenticated';
 
 const Login: React.FC = () => {
+  useRedirectIfAuthenticated()
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
   const { loading, error } = useAppSelector((state) => state.user);
@@ -46,6 +49,8 @@ const Login: React.FC = () => {
       }
     }
   };
+
+  const mostLogin = useRequireAuth()
 
 
   return (

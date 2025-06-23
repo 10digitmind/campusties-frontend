@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/signupsuccess.css'; // Optional: Create this for styling
+import useRedirectIfAuthenticated from './Utility/useRedirectIfAuthenticated';
 
 const SignupSuccess: React.FC = () => {
+  useRedirectIfAuthenticated()
   const navigate = useNavigate();
  const email = sessionStorage.getItem('signupEmail');
   const handleGoToLogin = () => {

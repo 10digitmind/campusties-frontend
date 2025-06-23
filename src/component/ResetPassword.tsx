@@ -3,8 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/resetpassword.css';
 import { Eye, EyeOff } from 'lucide-react'; 
+import useRedirectIfAuthenticated from './Utility/useRedirectIfAuthenticated';
 
 const ResetPassword: React.FC = () => {
+  useRedirectIfAuthenticated()
   const { token } = useParams();
   const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState('');
@@ -12,15 +14,16 @@ const ResetPassword: React.FC = () => {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [getPasswordStrengths, setShowPasswordStrenghts] = useState(false);
-  
+  const API_URL =process.env.REACT_APP_BACKEND_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault();
     setSuccess('');
     setError('');
 
     try {
-      const res = await axios.post(`http://localhost:5000/api/reset-password/${token}`, { newPassword });
+      const res = await axios.post(`${API_URL}/reset-password/${token}`, { newPassword });
       setSuccess(res.data.message || 'Password reset successful!');
       setTimeout(() => navigate('/login'), 2000);
     } catch (err: any) {

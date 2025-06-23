@@ -2,6 +2,7 @@ import React from 'react';
 import { useAppSelector ,useAppDispatch} from '../store/hook'; 
 import { profileView } from './AppTypes/User';
 import { useNavigate } from 'react-router-dom';
+import { useRequireAuth } from './Utility/requireAuth';
 
 
 const calculateAge = (dob: string | Date | undefined | null): number | null => {
@@ -19,6 +20,7 @@ const calculateAge = (dob: string | Date | undefined | null): number | null => {
 
   
   const WhoViewedMe: React.FC = () => {
+    useRequireAuth()
     // Selectors from Redux or state management with correct type annotation
     const viewedProfiles = useAppSelector((state): profileView[]| null => state.user.viewers);
     const loading = useAppSelector((state) => state.user.loading);

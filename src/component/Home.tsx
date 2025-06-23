@@ -8,7 +8,7 @@ export class Home extends Component {
     return (
       <div>
      
-<Hero2/>
+      <Hero2/>
         <Hero/>
         <Explore/>
       </div>

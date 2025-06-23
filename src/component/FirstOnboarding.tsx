@@ -15,7 +15,7 @@ type LookingFor =
 
 type UserType = "student" | "graduate" | "";
 
-
+const API_URL =process.env.REACT_APP_BACKEND_URL;
 
 const steps = ["Basic Info", "Preferences", "Profile Photo"];
 
@@ -91,14 +91,14 @@ const navigate = useNavigate()
       // 1. Upload to ImageKit if photo exists
       if (photo) {
         const { data } = await axios.get(
-          "http://localhost:5000/api/imagekit-auth"
+          `${API_URL}/imagekit-auth`
         ); // Your backend route
         const { token, expire, signature } = data;
 
         const form = new FormData();
         form.append("file", photo);
         form.append("fileName", photo.name);
-        form.append("publicKey", "public_rlKOhbCJ9qz2TEcZnva5f70EwOo=");
+        form.append("publicKey", `${process.env.REACT_APP_IMAGE_KEY}`);
         form.append("useUniqueFileName", "true");
         form.append("token", token);
         form.append("expire", expire);
@@ -128,9 +128,10 @@ const navigate = useNavigate()
       };
 
 
+     
       
       const onb =await axios.put(
-        "http://localhost:5000/api/complete-onboarding",
+        `${API_URL}/complete-onboarding`,
         payload,
         {
           headers: {

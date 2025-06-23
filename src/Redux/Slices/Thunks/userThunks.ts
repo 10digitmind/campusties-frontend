@@ -1,7 +1,7 @@
 // redux/thunks/userThunks.ts
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { UserData ,SlimUser, Match,LikeUserResponse, UserPublicProfile, profileView, LikeItem} from '../../../component/AppTypes/User';
+import { UserData , Match,LikeUserResponse, UserPublicProfile, profileView, LikeItem} from '../../../component/AppTypes/User';
 
 interface LoginCredentials {
   email: string;
@@ -33,6 +33,8 @@ interface VerifyEmailPayload {
     token: string;
   }
 
+  const API_URL =process.env.REACT_APP_BACKEND_URL;
+
 
 
   export const loginUser = createAsyncThunk<
@@ -41,7 +43,7 @@ interface VerifyEmailPayload {
   { rejectValue: string }
 >('user/login', async (credentials, thunkAPI) => {
   try {
-    const res = await axios.post('http://localhost:5000/api/loginuser', credentials);
+    const res = await axios.post(`${API_URL}/loginuser`, credentials);
 if(res){
     localStorage.setItem('token',res.data.token)
 }
@@ -62,7 +64,7 @@ export const createUser = createAsyncThunk<
   { rejectValue: string }
 >('user/create', async (userData, thunkAPI) => {
   try {
-    const res = await axios.post('http://localhost:5000/api/createuser', userData);
+    const res = await axios.post(`${API_URL}/createuser`, userData);
     return res.data.user;
   } catch (err: any) {
     return thunkAPI.rejectWithValue(err.response?.data?.message || 'Registration failed');
@@ -77,7 +79,7 @@ export const createUser = createAsyncThunk<
     
   >('user/verifyEmail', async ({ token }, thunkAPI) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/verifyemail/${token}`)
+      const res = await axios.get(`${API_URL}/verifyemail/${token}`)
       return res.data;
     }  catch (err: any) {
         
@@ -91,7 +93,7 @@ export const createUser = createAsyncThunk<
   { rejectValue: string }
 >('user/verifyNewDevice', async (credentials, thunkAPI) => {
   try {
-    const res = await axios.post('http://localhost:5000/api/confirm-login-code', credentials); // adjust endpoint if needed
+    const res = await axios.post(`${API_URL}/confirm-login-code`, credentials); // adjust endpoint if needed
     if(res){
         localStorage.setItem('token',res.data.token)
     }
@@ -115,7 +117,7 @@ export const getUser = createAsyncThunk<
   try {
     const token = localStorage.getItem('token');
 
-    const res = await axios.get('http://localhost:5000/api/getuser', {
+    const res = await axios.get(`${API_URL}/getuser`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -138,7 +140,7 @@ LikeItem[],           // return type
   async (_, thunkAPI) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/get-users-i-liked', {
+      const res = await axios.get(`${API_URL}/get-users-i-liked`, {
        
         headers: {
           Authorization: `Bearer ${token}`,
@@ -163,7 +165,7 @@ LikeItem[],           // return type
   async (_, thunkAPI) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/get-users-who-liked-me', {
+      const res = await axios.get(`${API_URL}/get-users-who-liked-me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -187,7 +189,7 @@ export const likeUser = createAsyncThunk<
   async (likedUserId, { rejectWithValue }) => {
     try {
         const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:5000/api/like-user', { likedUserId },{
+      const response = await axios.post(`${API_URL}/like-user`, { likedUserId },{
         headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -215,7 +217,7 @@ export const fetchMatches = createAsyncThunk<
   async (_, thunkAPI) => {
     try {
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5000/api/get-all-matches', {
+      const res = await axios.get(`${API_URL}/get-all-matches`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -238,7 +240,7 @@ export const getAllUser = createAsyncThunk<
 >('user/getAllUser', async (_, thunkAPI) => {
   try {
     
-    const res = await axios.get('http://localhost:5000/api/get-all-users', {
+    const res = await axios.get(`${API_URL}/get-all-users`, {
     });
     return res.data;  // ✅ return only the user object
   } catch (err: any) {
@@ -263,7 +265,7 @@ export const getProfileView = createAsyncThunk<
         return rejectWithValue('User ID is required');
       }
 
-      const response = await axios.get(`http://localhost:5000/api/get-viewers/${userId}`, {
+      const response = await axios.get(`${API_URL}/get-viewers/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

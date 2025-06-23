@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAppSelector } from '../store/hook';
 import { useNavigate } from 'react-router-dom';
 import { LikeItem, SlimUser } from './AppTypes/User';
+import { useRequireAuth } from './Utility/requireAuth';
 // Ensure this contains user fields like userName, profilePhoto, etc.
 
 const calculateAge = (dob: string | Date | undefined | null): number | null => {
@@ -20,10 +21,11 @@ const calculateAge = (dob: string | Date | undefined | null): number | null => {
 
 
 const WhoLiked: React.FC = () => {
+    useRequireAuth()
  const userILiked =useAppSelector((state) => state.user.userILiked);
  const getUsersWhoLikedMeToo =useAppSelector((state) => state.user.getUsersWhoLikedMe);
 
- console.log(getUsersWhoLikedMeToo)
+
   const loading = useAppSelector((state) => state.user.loading);
 
   const [activeTab, setActiveTab] = useState<'liked' | 'likedMe'>('liked');

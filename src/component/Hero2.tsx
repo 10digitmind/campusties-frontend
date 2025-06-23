@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { motion } from "framer-motion";
 import '../styles/hero2.css'
-
+import { useAppSelector ,useAppDispatch} from '../store/hook'; 
 
 import { useNavigate } from 'react-router-dom';
 const testimonialData = [
@@ -47,9 +47,16 @@ const testimonialData = [
     image: "https://images.unsplash.com/photo-1611620005506-96178482161f?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fHlvdW5nJTIwbG92ZSUyMGJsYWNrJTIwY291cGxlfGVufDB8fDB8fHww",
   },
 ];
-
+const welcomeMessages = [
+  "Welcome back! You're just a few clicks away from discovering a meaningful connection 💑.",
+  "Hey there! Love might just be a swipe away 😉",
+  "Welcome back — your next match could be the one 💑.",
+  "Good to see you again! Let's get you closer to someone special ♥️.",
+  "Welcome back! Ready to meet someone amazing? 🌹",
+];
 const Hero2: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+      const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
   const navigate = useNavigate();
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,9 +65,14 @@ const Hero2: React.FC = () => {
 
     return () => clearInterval(interval);
   }, []);
-
+  const randomMessage = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
   return (
-    <motion.section
+    <div>
+
+  
+   {isAuthenticated?<div style={{height:"120px", width:'100%',color:"white", display:"flex", alignItems:"center", justifyContent:'center',marginTop:'40px'}}>
+    <p style={{fontSize:'1.5rem'}}>{randomMessage}</p>
+   </div>: <motion.section
       className="hero-section2"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -145,7 +157,8 @@ const Hero2: React.FC = () => {
           transition={{ duration: 0.6 }}
         />
       </motion.div>
-    </motion.section>
+    </motion.section>}
+    </div>
   );
 };
 
