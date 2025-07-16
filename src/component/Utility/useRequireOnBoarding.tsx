@@ -12,7 +12,6 @@ export const useRequireOnBoarding = () => {
 
     if (user && !user.hasCompletedOnboarding  && location.pathname !== '/onboarding' ) {
       navigate('/onboarding');
-      console.log(user)
     }
   }, [user, navigate, location]);
 

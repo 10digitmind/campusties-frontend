@@ -1,20 +1,21 @@
 // Explore.tsx
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/explore.css';
 import ExploreFilter from './Explorefilter';
 import { useAppDispatch, useAppSelector } from '../store/hook'; 
-import { getAllUser,likeUser} from '../Redux/Slices/Thunks/userThunks'; 
-import { UserData, UserPublicProfile } from './AppTypes/User';
+import { getAllUser,getUserILiked,likeUser} from '../Redux/Slices/Thunks/userThunks'; 
+import { LikeItem, UserData, UserPublicProfile } from './AppTypes/User';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
-
+import { getSocket } from './Utility/socketutility/Socket';
 
 
 const Explore: React.FC = () => {
     const [localUsers, setLocalUsers] = useState<UserPublicProfile[]>([]);
     const [loading, setLoading] = useState<Boolean>(true)
+    const [likedUser, setLikedUser] = useState<{ [key: string]: boolean }>({});
+    const [userIliked, setUserIliked] = useState<LikeItem[]>([])
     const dispatch = useAppDispatch();
   
     const allUsers = useAppSelector(state => state.user.getEveryUsers);
@@ -27,17 +28,33 @@ const Explore: React.FC = () => {
     const navigate=useNavigate()
 
     useEffect(() => {
-      dispatch(getAllUser());
-      setLoading(false)
-    }, [dispatch]);
+     
+        dispatch(getAllUser());
+        setLoading(false)
+
+        console.log('current user:',currentUser?._id)
+      
+    }, [dispatch,token,currentUser]);
+
+
+  // Map the _ids of liked users into an object for fast lookup
+  useEffect(() => {
+    if (userILiked) {
+      const likedMap: { [key: string]: boolean } = {};
+      userILiked.forEach((item) => {
+        likedMap[item.likedUser._id] = true;
+      });
+      setLikedUser(likedMap);
+    }
+  }, [userILiked]);
   
+
     useEffect(() => {
 
       if (!Array.isArray(allUsers)) return;
     
       if (currentUser?._id) {
         const filtered = allUsers.filter(user => user._id !== currentUser._id);
-      
         setLocalUsers(filtered);
       } else {
         setLocalUsers(allUsers); // show all if no user is logged in
@@ -45,33 +62,39 @@ const Explore: React.FC = () => {
     
     }, [allUsers, currentUser]);
     
-
+   
     
 
 
-  
     const toggleLike = async (id: string) => {
-        try {
 
-          const token = localStorage.getItem('token')
-          if(!token){
-            toast.error('please log in to like user')
-            return
-          }
-          const resultAction = await dispatch(likeUser(id));
-          if (likeUser.fulfilled.match(resultAction)) {
-            setLocalUsers(prev =>
-              prev.map(user =>
-                user._id === id ? { ...user, liked: !user.liked } : user
-              )
-            );
-          } else {
-            console.error("Failed to toggle like.");
-          }
-        } catch (error) {
-          console.error("Error toggling like:", error);
+      setLikedUser((prev) => ({
+        ...prev,
+        [id]: !prev[id], // toggle the current state
+      }));
+
+
+      try {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+          toast.error('Please log in to like user');
+          return;
         }
-      };
+    
+        const socket = getSocket();
+        if (!socket || !socket.connected) {
+          toast.error('Socket not connected');
+          return;
+        }
+    
+          socket.emit("like", { likedUserId: id });
+         
+
+      } catch (error) {
+        console.error("Error toggling like:", error);
+      }
+    };
 
       const calculateAge = (dob: string | Date | undefined | null): number | null => {
         if (!dob) return null;
@@ -163,9 +186,9 @@ const Explore: React.FC = () => {
                            
                             toggleLike(user._id);
                           }}
-                        
+                       style={{backgroundColor:`${likedUser[user._id]?'gold':'white'}`}} 
                       >
-                {userILiked?.some(u => u._id === user._id) ? "💛 Liked" : "🤍 Like"}
+{likedUser[user._id] ? "💛 Liked" : "🤍 Like"}
 
                       </button>
                     </motion.div>

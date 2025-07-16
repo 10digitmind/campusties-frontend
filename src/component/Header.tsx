@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../styles/header.css'
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector ,useAppDispatch} from '../store/hook'; 
-import { logout, } from '../Redux/Slices/userSlices'; 
+import { logout,addUserILiked,removeUserILiked,addUserLikedMe,removeUserLikedMe  } from '../Redux/Slices/userSlices'; 
 import {  getUserILiked, getUsersWhoLikedMe, fetchMatches, getProfileView } from '../Redux/Slices/Thunks/userThunks';
+import { getSocket } from '../component/Utility/socketutility/Socket';
+
 
 const Header: React.FC = () =>{
 
@@ -37,7 +39,9 @@ useEffect(()=>{
     }
 },[token, dispatch,user?._id])
 
-;
+
+
+
 
 
 

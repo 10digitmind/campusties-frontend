@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { SocketProvider } from "../src/component/Utility/socketutility/SocketContext";
 import Home from './component/Home';
 import Login from './component/Login';
 
@@ -13,8 +14,8 @@ import SignupSuccess from './component/SignupSuccess';
 import ForgotPassword from './component/ForgotPassword';
 import ResetPassword from './component/ResetPassword';
 import { ToastContainer } from 'react-toastify';
-import { useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from '../src/store/hook'; 
 import { getUser } from '../src/Redux/Slices/Thunks/userThunks'; 
 import FirstOnboarding from './component/FirstOnboarding';
@@ -26,26 +27,39 @@ import ViewUserProfile from './component/ViewUserProfile';
 import WhoViewedMe from './component/WhoViewedMe';
 import WhoLiked from './component/WhoLikedMe';
 import Matches from './component/Matches';
+import { UserData } from './component/AppTypes/User';
+import Chat from './component/Chat';
 
 
 
- 
+
+
+const token = localStorage.getItem('token');
 
 
 function App() {
   const user = useRequireOnBoarding();
   useAutoLogout()
-  const token = localStorage.getItem('token');
+
 const dispatch = useAppDispatch();
+const [localUsers, setLocalUsers] = useState<UserData[]>([]);
+
+
+
+
+
+
+
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     if (token) {
       dispatch(getUser());
     } else {
     
       dispatch(logout()); // optional: clear user state
     }
-  }, [dispatch, token]);
+  }, [dispatch]);
   return (
     <>
  <ToastContainer
@@ -59,7 +73,7 @@ const dispatch = useAppDispatch();
  theme="dark"
 />
 
-
+<SocketProvider token={token!}>
       <Routes>
         {/* Splash route (no header/footer) */}
         <Route path="/" element={<SplashScreen />} />
@@ -81,8 +95,10 @@ const dispatch = useAppDispatch();
           <Route path="/who-viewed-me" element={<WhoViewedMe />} />
           <Route path="/who-liked-me" element={<WhoLiked />} />
           <Route path="/matches" element={<Matches />} />
+          <Route path="/chat/:OtherUserId" element={<Chat/>} />
         </Route>
       </Routes>
+      </SocketProvider>
 
     </>
   );

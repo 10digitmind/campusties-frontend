@@ -73,7 +73,7 @@ const WhoLiked: React.FC = () => {
       </div>
 
       {(!usersToShow || usersToShow.length === 0) ? (
-        <p>No users found in this section.</p>
+        <p style={{color:"white"}}>No users found in this section.</p>
       ) : (
         <div
           className="likes-container"

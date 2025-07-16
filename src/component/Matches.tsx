@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppSelector } from '../store/hook';
 import { useNavigate } from 'react-router-dom';
 import { useRequireAuth } from './Utility/requireAuth';
@@ -9,7 +9,9 @@ const Matches: React.FC = () => {
 const matches = useAppSelector((state) => state.user.matches);
   const loading = useAppSelector((state) => state.user.loading);
   const navigate = useNavigate();
-
+  useEffect(()=>{
+    console.log(matches)
+  })
   if (loading) {
     return (
       <p style={{ backgroundColor: 'black', width: "100%", height: "100vh", color: "white", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -24,6 +26,7 @@ const matches = useAppSelector((state) => state.user.matches);
     return Math.abs(ageDt.getUTCFullYear() - 1970);
   }
   
+ 
   return (
     <div
       style={{

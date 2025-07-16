@@ -28,8 +28,8 @@ interface UserState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
-  userILiked: LikeItem[] | null;
-  getUsersWhoLikedMe: LikeItem[] | null;
+  userILiked: LikeItem[] 
+  getUsersWhoLikedMe: LikeItem[]
   LikeResponse: LikeUserResponse | null;
   getEveryUsers:UserPublicProfile |null
   matches:Match[]|null
@@ -42,12 +42,12 @@ const initialState: UserState = {
   isAuthenticated: false,
   loading: false,
   error: null,
-  userILiked: null,
-  getUsersWhoLikedMe: null,
+  userILiked:[],
+  getUsersWhoLikedMe:[],
   LikeResponse: null,
   getEveryUsers: null,
-  matches:null,
-  viewers:null
+  matches:[],
+  viewers:[]
 
 };
 
@@ -62,6 +62,33 @@ const userSlice = createSlice({
       state.loading = false;
       localStorage.clear();
     },
+    addUserILiked: (state, action) => {
+      // action.payload should be a full LikeItem, not just an id string
+      const newLike: LikeItem = action.payload;
+      const alreadyExists = state.userILiked.some(user => user._id === newLike._id);
+      if (!alreadyExists) {
+        state.userILiked.push(newLike);
+      }
+    },
+    
+    removeUserILiked: (state, action) => {
+      const idToRemove: string = action.payload;
+      state.userILiked = state.userILiked.filter(user => user._id !== idToRemove);
+    },
+    
+    addUserLikedMe: (state, action) => {
+      const newLike: LikeItem = action.payload;
+      const alreadyExists = state.getUsersWhoLikedMe.some(user => user._id === newLike._id);
+      if (!alreadyExists) {
+        state.getUsersWhoLikedMe.push(newLike);
+      }
+    },
+    
+    removeUserLikedMe: (state, action) => {
+      const idToRemove: string = action.payload;
+      state.getUsersWhoLikedMe = state.getUsersWhoLikedMe.filter(user => user._id !== idToRemove);
+    },
+    
   },
   extraReducers: (builder) => {
     builder
@@ -231,5 +258,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout,addUserILiked,removeUserILiked,addUserLikedMe,removeUserLikedMe } = userSlice.actions;
 export default userSlice.reducer;
