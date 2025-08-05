@@ -40,7 +40,7 @@ const initialState: UserState = {
   user: null,
   token: null,
   isAuthenticated: false,
-  loading: false,
+  loading: true,
   error: null,
   userILiked:[],
   getUsersWhoLikedMe:[],
@@ -55,6 +55,10 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+
+    setUser: (state, action) => {
+      state.user = action.payload;
+    },
     logout(state) {
       state.user = null;
       state.isAuthenticated = false;
@@ -62,6 +66,8 @@ const userSlice = createSlice({
       state.loading = false;
       localStorage.clear();
     },
+
+   
     addUserILiked: (state, action) => {
       // action.payload should be a full LikeItem, not just an id string
       const newLike: LikeItem = action.payload;
@@ -258,5 +264,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout,addUserILiked,removeUserILiked,addUserLikedMe,removeUserLikedMe } = userSlice.actions;
+export const { logout,addUserILiked,removeUserILiked,addUserLikedMe,removeUserLikedMe,setUser } = userSlice.actions;
 export default userSlice.reducer;

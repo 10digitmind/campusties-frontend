@@ -11,10 +11,7 @@ const Login: React.FC = () => {
   useRedirectIfAuthenticated()
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
-  const { loading, error } = useAppSelector((state) => state.user);
 
-  const token =useAppSelector((state) => state.user.token);
-  const user =useAppSelector((state) => state.user.user);
 
   const dispatch = useAppDispatch()
  const navigate = useNavigate();

@@ -88,8 +88,8 @@ export interface UserData {
 }
 
 export interface LikeItem{
-  _id:string;
-  likedAt:Date;
+  _id?:string;
+  likedAt:string;
   likedUser:SlimUser
   liker?: SlimUser;
 }
@@ -102,6 +102,7 @@ export interface LikeItem{
     _id?: string;
     matchedAt: Date |string  // Can be ID or populated object
     otherUser:   SlimUser;
+    isActive:Boolean
   }
   
   type Viewer = {
@@ -140,4 +141,23 @@ export interface LikeItem{
     liked?: boolean;
     dateOfBirth:Date; // Local-only field for UI
   }
+  export interface UserSummary {
+    _id: string;
+    userName: string;
+    profilePhoto: string;
+  }
   
+  export interface MessageSummary {
+    senderId: string;
+    senderName: string;
+    content: string;
+    timestamp: string;
+    _id: string;
+  }
+  
+  export interface ConversationSummary {
+    conversationId: string;
+    otherUser: UserSummary;
+    lastMessage: MessageSummary | null;
+    updatedAt: string;
+  }

@@ -101,22 +101,22 @@ const WhoLiked: React.FC = () => {
                   backgroundColor: '#fff',
                   cursor: 'pointer'
                 }}
-                onClick={() => navigate(`/view-profile/${person._id}`)}
+                onClick={() => navigate(`/view-profile/${person?._id}`)}
               >
                 <img
-                  src={person.profilePhoto}
-                  alt={`${person.userName}'s profile`}
+                  src={person?.profilePhoto}
+                  alt={`${person?.userName}'s profile`}
                   style={{ width: 60, height: 60, borderRadius: '50%', objectFit: 'cover' }}
                 />
                 <div>
                   <h3 style={{ margin: 0 }}>
-                    {person.userName}
-                    {person.dateOfBirth && (
+                    {person?.userName}
+                    {person?.dateOfBirth && (
                       <span> ({calculateAge(person.dateOfBirth)} yrs old)</span>
                     )}
                   </h3>
                   <p style={{ margin: '0.25rem 0' }}>
-                    {person.gender} &bull; {person.institution}
+                    {person?.gender} &bull; {person?.institution}
                   </p>
                   <small style={{ color: '#666' }}>
                     {activeTab === 'liked' ? 'Liked on' : 'Liked you on'} {date}

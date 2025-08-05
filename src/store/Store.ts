@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from '../Redux/Slices/userSlices';
+import likeReducer from '../Redux/Slices/Thunks/likesSlice';
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    likes:likeReducer
   },
 });
 

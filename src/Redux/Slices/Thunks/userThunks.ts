@@ -147,7 +147,6 @@ LikeItem[],           // return type
         },
       
       });
-   
       return res.data.likedUsers as LikeItem[]; // Adjust if your API returns differently
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response?.data?.message || 'Failed to fetch likes');
@@ -165,12 +164,13 @@ LikeItem[],           // return type
   async (_, thunkAPI) => {
     try {
       const token = localStorage.getItem('token');
+    
       const res = await axios.get(`${API_URL}/get-users-who-liked-me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-   
+  
       return res.data.usersWhoLikedMe as LikeItem[]; // Adjust if your API returns differently
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response?.data?.message || 'Failed to fetch likes');
@@ -222,7 +222,7 @@ export const fetchMatches = createAsyncThunk<
           Authorization: `Bearer ${token}`,
         },
       });
- 
+
       return res.data as Match[]; // Adjust according to API response shape
     } catch (err: any) {
       console.log(err)

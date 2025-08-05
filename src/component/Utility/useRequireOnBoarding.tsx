@@ -10,10 +10,10 @@ export const useRequireOnBoarding = () => {
 
   useEffect(() => {
 
-    if (user && !user.hasCompletedOnboarding  && location.pathname !== '/onboarding' ) {
+    if (user && !user.hasCompletedOnboarding && token && location.pathname !== '/onboarding') {
       navigate('/onboarding');
     }
-  }, [user, navigate, location]);
+  }, [user, navigate, location,token]);
 
   return user;
 };

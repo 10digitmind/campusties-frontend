@@ -12,7 +12,7 @@ const SignupSuccess: React.FC = () => {
   };
 
   return (
-    <div className="signup-success-container">
+    <div style={{height:'40vh',marginTop:'60px', marginBottom:"60px"}} className="signup-success-container">
       <h2>🎉 Welcome to Thriftify!</h2>
 
       <p className="info-text">

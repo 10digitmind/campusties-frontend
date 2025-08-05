@@ -2,15 +2,22 @@ import React, { useEffect, useRef, useState } from 'react';
 import '../styles/header.css'
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector ,useAppDispatch} from '../store/hook'; 
-import { logout,addUserILiked,removeUserILiked,addUserLikedMe,removeUserLikedMe  } from '../Redux/Slices/userSlices'; 
+import { logout} from '../Redux/Slices/userSlices'; 
 import {  getUserILiked, getUsersWhoLikedMe, fetchMatches, getProfileView } from '../Redux/Slices/Thunks/userThunks';
-import { getSocket } from '../component/Utility/socketutility/Socket';
+import { setLikedCount,setLikedMeCount } from '../Redux/Slices/Thunks/likesSlice';
+import { getSocket } from './Utility/socketutility/Socket';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { Socket } from 'socket.io-client';
+
 
 
 const Header: React.FC = () =>{
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [totalLikes, setTotalLikes] = useState<number>(0)
+  const [totalMatches, setTotalMatches] = useState<number>(0)
+  const [totalView, setTotalView] = useState<number>(0)
   const [menuOpen, setMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -21,11 +28,26 @@ const Header: React.FC = () =>{
   const navigate = useNavigate()
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
 const user = useAppSelector((state) => state.user.user);
-const userILiked =useAppSelector((state) => state.user.userILiked);
-const getUsersWhoLikedMeToo =useAppSelector((state) => state.user.getUsersWhoLikedMe);
+
+
+
 const matches = useAppSelector((state) => state.user.matches);
 const viwedProfile = useAppSelector((state) => state.user.viewers);
+
+
+
+
+
 const token = localStorage.getItem('token')
+
+
+
+
+useEffect(() => {
+  
+}, [dispatch]);
+
+
 
 useEffect(()=>{
 
@@ -37,23 +59,75 @@ useEffect(()=>{
         dispatch(getProfileView(user?._id))
        
     }
+    
+
 },[token, dispatch,user?._id])
 
+const likeUpdate = () => {
+  const trySubscribe = () => {
+    const socket = getSocket();
+
+    if (!socket || !socket.connected) {
+      console.log("⏳ Waiting for socket connection...");
+      setTimeout(trySubscribe, 500); // retry after 500ms
+      return;
+    }
+
+    socket.on("countsUpdated", ({ total ,matches}) => {
+    
+      setTotalLikes(total);
+      setTotalMatches(matches)
+    });
 
 
+    socket.on("profileViewsUpdated", ({ count}) => {
+    
+      setTotalView(count)
+    });
 
+    console.log("✅ Subscribed to likesCountsUpdated");
+  };
 
-
-
-
+  trySubscribe();
+};
 
 useEffect(() => {
-    const likedCount = userILiked?.length || 0;
-    const likedMeCount = getUsersWhoLikedMeToo?.length || 0;
-    setTotalLikes(likedCount + likedMeCount);
+ 
+  const getLikeCount = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        'http://localhost:5000/api/get-likes-counts',
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if(res.data){
+        setTotalLikes(res.data.total);
+        setTotalMatches(res.data.matchCount)
+        setTotalView(res.data.profileViewCount)
+      }
+    
+    } catch (error) {
+      console.error("getting likes count failed:", error);
+    }
+  };
 
-  }, [userILiked, getUsersWhoLikedMeToo,matches]);
+  // Initial fetch
+  if (token){
+    getLikeCount();
+    likeUpdate()
+  } 
+
+  if (!token) return;
   
+
+
+
+
+
+}, [token]);
+
+
+ 
   
 
 
@@ -132,12 +206,12 @@ useEffect(() => {
 
             <a href="/who-liked-me" className="likes-link">❤️ Likes<span className='count'>{totalLikes}</span></a>
             <a href="/matches" className="matches-link">
-    💕 Matches <span className="count">{matches?.length}</span>
+    💕 Matches <span className="count">{totalMatches}</span>
   </a>
   
   
   <a href="/who-viewed-me" className="messages-link">
-  👁️ Viewed me <span className="count">{viwedProfile?.length}</span>
+  👁️ Viewed me <span className="count">{totalView}</span>
 </a>
   <a href="/messages" className="messages-link">
     💬 Messages <span className="count">1</span>

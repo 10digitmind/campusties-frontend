@@ -1,27 +1,36 @@
 // SocketContext.tsx
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { connectSocket, getSocket, disconnectSocket } from "../socketutility/Socket";
+import React, { createContext, useContext, useEffect, useRef } from "react";
+import { connectSocket,  disconnectSocket } from "../socketutility/Socket";
 import { Socket } from "socket.io-client";
 
 const SocketContext = createContext<Socket | null>(null);
 
 export const SocketProvider: React.FC<{ token: string; children: React.ReactNode }> = ({ token, children }) => {
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    const sock = connectSocket(token);
-    setSocket(sock);
-
+    if (token) {
+      const sock = connectSocket(token);
+      socketRef.current = sock;
+    }
+    
     return () => {
       disconnectSocket();
     };
   }, [token]);
 
-  return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={socketRef.current}>
+      {children}
+    </SocketContext.Provider>
+  );
 };
 
 export const useSocket = () => {
   const ctx = useContext(SocketContext);
-  if (!ctx) throw new Error("Socket not initialized. Use within <SocketProvider />");
+  if (ctx === null) {
+    console.warn("Socket is not connected yet.");
+  }
   return ctx;
 };
+

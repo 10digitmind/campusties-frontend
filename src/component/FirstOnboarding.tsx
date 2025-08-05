@@ -1,10 +1,10 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import axios from "axios";
 import "../styles/onboarding.css";
 import { useRequireAuth } from "./Utility/requireAuth";
 import { useNavigate } from "react-router-dom";
-
-
+import { useAppSelector,useAppDispatch } from '../store/hook';
+import { setUser } from "../Redux/Slices/userSlices";
 type LookingFor =
   | ""
   | "read buddy 📖"
@@ -19,6 +19,8 @@ const API_URL =process.env.REACT_APP_BACKEND_URL;
 
 const steps = ["Basic Info", "Preferences", "Profile Photo"];
 
+
+
 const FirstOnboarding: React.FC = () => {
   const [step, setStep] = useState(0);
 
@@ -31,13 +33,22 @@ const FirstOnboarding: React.FC = () => {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [bio, setBio] = useState<string>('');
   const [gender, setGender] = useState<string>('');
-
+  const user = useAppSelector(state => state.user.user);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState<string | null>(null);
 
+  const navigate = useNavigate()
+ const dispatch = useAppDispatch()
+useEffect(()=>{
+  if(user && user.hasCompletedOnboarding){
+    navigate('/explore')
+  }
+},[user,navigate])
+
+
   const loggedInUser = useRequireAuth();
-const navigate = useNavigate()
+
   if (!loggedInUser) return null;
 
   const isGraduate = userType === "graduate";
@@ -127,10 +138,7 @@ const navigate = useNavigate()
         gender
       };
 
-
-     
-      
-      const onb =await axios.put(
+            const onb =await axios.put(
         `${API_URL}/complete-onboarding`,
         payload,
         {
@@ -143,7 +151,9 @@ const navigate = useNavigate()
       setMessage("Success! Onboarding complete.");
       setTimeout(() => {
         navigate('/explore')
-      }, 2000);
+        dispatch(setUser({ ...user, hasCompletedOnboarding: true }));
+
+      }, 1000);
     } catch (err) {
       console.error(err);
       setMessage("Error submitting form. Try again.");

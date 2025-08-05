@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import { useAppSelector } from '../store/hook';
 import { useNavigate } from 'react-router-dom';
 import { useRequireAuth } from './Utility/requireAuth';
+import Chat from './Chat';
  // assuming you already use this
 
 const Matches: React.FC = () => {
     useRequireAuth()
 const matches = useAppSelector((state) => state.user.matches);
   const loading = useAppSelector((state) => state.user.loading);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
   const navigate = useNavigate();
-  useEffect(()=>{
-    console.log(matches)
-  })
+
   if (loading) {
     return (
       <p style={{ backgroundColor: 'black', width: "100%", height: "100vh", color: "white", display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -100,11 +101,12 @@ const matches = useAppSelector((state) => state.user.matches);
                   <small style={{ color: '#999' }}>Matched on {date}</small>
                 </div>
   
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevents card click from triggering profile view
-                    navigate(`/chat/${user._id}`);
-                  }}
+              {match.isActive?  <button
+               onClick={(e) => {
+                e.stopPropagation(); // ✅ stops navigation to profile
+                setSelectedUserId(user._id); // ✅ opens chat
+              }}
+
                   style={{
                     marginTop: '1rem',
                     padding: '0.5rem 1.2rem',
@@ -118,12 +120,63 @@ const matches = useAppSelector((state) => state.user.matches);
                   }}
                 >
                   💬 Chat
-                </button>
+                </button>:<h5 style={{color:"gold"}}>No longer a match cant chat</h5>}
               </div>
+              
             );
           })}
         </div>
+        
       )}
+      {selectedUserId && (
+  <div
+    style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      background: 'rgba(0,0,0,0.6)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 9999,
+    }}
+    onClick={() => setSelectedUserId(null)}
+  >
+    <div
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        background: '#fff',
+        borderRadius: '10px',
+        padding: '1rem',
+        width: '95%',
+        maxWidth: '500px',
+        maxHeight: '90vh',
+        overflow: 'auto',
+        position: 'relative',
+      }}
+    >
+      <button
+        onClick={() => setSelectedUserId(null)}
+        style={{
+          position: 'absolute',
+          top: 10,
+          right: 10,
+          background: 'transparent',
+          border: 'none',
+          fontSize: '1.5rem',
+          cursor: 'pointer',
+        }}
+      >
+        ×
+      </button>
+
+      <Chat OtherUserId={selectedUserId} />
+    </div>
+  </div>
+)}
+
     </div>
   );
   

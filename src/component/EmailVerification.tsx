@@ -28,7 +28,7 @@ const EmailVerification: React.FC = () => {
   
    
     return (
-      <div className="verify-email-container">
+      <div style={{height:'35vh',marginTop:'60px', marginBottom:"60px"}}className="verify-email-container">
         <h2>Email Verification</h2>
   
         {loading && <p className="info-text">Verifying your email...</p>}

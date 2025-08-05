@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import '../styles/viewprofile.css'
 import useRedirectIfAuthenticated from './Utility/useRedirectIfAuthenticated';
 import { useRequireAuth } from './Utility/requireAuth';
+import { getSocket } from './Utility/socketutility/Socket';
 
 const calculateAge = (dob: string | Date | undefined | null): number | null => {
     if (!dob) return null;
@@ -64,27 +65,14 @@ const calculateAge = (dob: string | Date | undefined | null): number | null => {
 
 
   useEffect(() => {
-    const profileView = async () => {
-      try {
-        const res = await axios.post(
-          `${API_URL}/create-profile-viewers/${id}`,
-          {}, // empty body since you don't seem to send any data
-          {
-            headers: {
-              Authorization: `Bearer ${token}`  // note the space after 'Bearer'
-            }
-          }
-        );
-     
-      } catch (error) {
-        console.error("Failed to load profile", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    profileView()
-   
-  },[id]);
+    const socket = getSocket()
+
+    if (!id || !socket) return;
+  
+    // Tell server: current user is viewing someone’s profile
+    socket.emit("view_profile", { viewedUserId: id });
+  
+  }, [id]);
   
 
 

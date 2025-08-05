@@ -26,12 +26,16 @@ const calculateAge = (dob: string | Date | undefined | null): number | null => {
     const loading = useAppSelector((state) => state.user.loading);
     const navigate = useNavigate()
 
+  
     if (loading) {
+    
       return <p style={{backgroundColor:'black',width:"100%", height:"100vh", color:"white", display:'flex',alignItems:'center',justifyContent:'center'}}>Loading...</p>;
     }
   
     if (!viewedProfiles || viewedProfiles.length === 0) {
-      return <p>No one has viewed your profile yet.</p>;
+      return<div style={{height:'50vh', display:"flex",justifyContent:'center',alignItems:'center'}}>
+<p style={{color:"white"}}>No one has viewed your profile yet.</p>;
+      </div> 
     }
   
     return (
@@ -73,7 +77,7 @@ const calculateAge = (dob: string | Date | undefined | null): number | null => {
                       cursor: 'pointer',
                       transition: 'box-shadow 0.2s ease-in-out',
                     }}
-                    onClick={() => navigate(`/view-profile/${viewer._id}`)}
+                    onClick={() => navigate(`/view-profile/${viewer?._id}`)}
                     onMouseEnter={(e) =>
                       ((e.currentTarget.style.boxShadow =
                         '0 4px 12px rgba(0,0,0,0.1)'))
@@ -83,8 +87,8 @@ const calculateAge = (dob: string | Date | undefined | null): number | null => {
                     }
                   >
                     <img
-                      src={viewer.profilePhoto}
-                      alt={`${viewer.userName}'s profile`}
+                      src={viewer?.profilePhoto}
+                      alt={`${viewer?.userName}'s profile`}
                       style={{
                         width: 60,
                         height: 60,
@@ -95,13 +99,13 @@ const calculateAge = (dob: string | Date | undefined | null): number | null => {
                     />
                     <div>
                       <h3 style={{ margin: 0 }}>
-                        {viewer.userName}
-                        {viewer.dateOfBirth && (
-                          <span> ({calculateAge(viewer.dateOfBirth)} yrs old)</span>
+                        {viewer?.userName}
+                        {viewer?.dateOfBirth && (
+                          <span> ({calculateAge(viewer?.dateOfBirth)} yrs old)</span>
                         )}
                       </h3>
                       <p style={{ margin: '0.25rem 0', color: '#444' }}>
-                        {viewer.gender} &bull; {viewer.institution}
+                        {viewer?.gender} &bull; {viewer?.institution}
                       </p>
                       <small style={{ color: '#888' }}>Viewed on {viewedDate}</small>
                     </div>

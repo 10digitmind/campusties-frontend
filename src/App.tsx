@@ -29,12 +29,13 @@ import WhoLiked from './component/WhoLikedMe';
 import Matches from './component/Matches';
 import { UserData } from './component/AppTypes/User';
 import Chat from './component/Chat';
+import Message from './component/Messages';
 
 
 
 
 
-const token = localStorage.getItem('token');
+const token: string = localStorage.getItem("token")!;
 
 
 function App() {
@@ -47,12 +48,8 @@ const [localUsers, setLocalUsers] = useState<UserData[]>([]);
 
 
 
-
-
-
-
   useEffect(() => {
-    const token = localStorage.getItem('token');
+  
     if (token) {
       dispatch(getUser());
     } else {
@@ -73,7 +70,7 @@ const [localUsers, setLocalUsers] = useState<UserData[]>([]);
  theme="dark"
 />
 
-<SocketProvider token={token!}>
+<SocketProvider token={token}>
       <Routes>
         {/* Splash route (no header/footer) */}
         <Route path="/" element={<SplashScreen />} />
@@ -95,7 +92,8 @@ const [localUsers, setLocalUsers] = useState<UserData[]>([]);
           <Route path="/who-viewed-me" element={<WhoViewedMe />} />
           <Route path="/who-liked-me" element={<WhoLiked />} />
           <Route path="/matches" element={<Matches />} />
-          <Route path="/chat/:OtherUserId" element={<Chat/>} />
+
+          <Route path="/messages" element={<Message/>} />
         </Route>
       </Routes>
       </SocketProvider>

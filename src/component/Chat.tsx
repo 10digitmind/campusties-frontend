@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { getSocket } from "../component/Utility/socketutility/Socket"
 import "../styles/chat.css"; // Load your gold-white-black CSS
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '../store/hook'; 
 
 type Message = {
@@ -15,23 +15,28 @@ type Message = {
 };
 
 
+type ChatProps = {
+    OtherUserId: string;
+  };
+  type ChatStatus = {
+    isActive: boolean;
+    unlikedBy: string | null; // null if still liked
+  };
 
-
-
-const Chat: React.FC= () => {
+const Chat: React.FC<ChatProps> = ({ OtherUserId }) => {
   const [chatId, setChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = React.useState(false);
-  const [loading, setLoading] = useState(true); // default is loading
+  const [loading, setLoading] = useState(true); 
+  const [chatStatus, setChatStatus] = useState<ChatStatus>({} as ChatStatus);
+
 
  
 
   const chatEndRef = useRef<HTMLDivElement>(null);
      const currentUser = useAppSelector(state => state.user.user);
      const matches = useAppSelector((state) => state.user.matches);
-const {OtherUserId} =useParams()
-
 
 
 
@@ -47,8 +52,10 @@ const {OtherUserId} =useParams()
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+
+        console.log('res',res)
         setChatId(res.data.chat._id);
-     
+        setChatStatus(res.data.matchStatus)
 
       } catch (error: any) {
         console.error("Chat init failed:", error.response?.data?.message || error.message);
@@ -60,8 +67,6 @@ const {OtherUserId} =useParams()
 
   useEffect(() => {
     const socket = getSocket();
-  
-   
   
     socket?.on("receive_message", ({ message }) => {
         setMessages((prev) => [...prev, message]);
@@ -82,23 +87,36 @@ const {OtherUserId} =useParams()
   
   useEffect(() => {
     const token = localStorage.getItem("token");
+  
     const fetchMessages = async () => {
-        try {
-            setLoading(true); // Start loading
-            const res = await axios.get(
-              `http://localhost:5000/api/get-chat/${chatId}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            setMessages(res.data.messages);
-          } catch (error) {
-            console.error("❌ Failed to load messages:", error);
-          } finally {
-            setLoading(false); // Stop loading
-          }
+      try {
+        setLoading(true);
+  
+        const res = await axios.get(
+          `http://localhost:5000/api/get-chat/${chatId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+  
+        if (res.data.messages) {
+          setMessages(res.data.messages);
+        }
+  
+        if (res.data.matchStatus) {
+       
+          const normalizedStatus = {
+            ...res.data.matchStatus,
+            isActive:
+              res.data.matchStatus.isActive === true ||
+              res.data.matchStatus.isActive === "true",
+          };
+  
+          setChatStatus(normalizedStatus);
+        }
+      } catch (error) {
+        console.error("❌ Failed to load messages:", error);
+      } finally {
+        setLoading(false);
+      }
     };
   
     if (chatId) {
@@ -108,11 +126,13 @@ const {OtherUserId} =useParams()
   
   
   
+  
 
   // Step 2: Scroll to bottom on new message
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages,]);
+  
+  }, [messages]);
 
   const handleSend = () => {
     if (!input.trim()) return;
@@ -171,61 +191,70 @@ if(socket){
 
  
   return (
-  
-  <>
- 
-    <div className="chat-container">
-      <div className="chat-header">Your  conversation {otherName?otherName:'other user'} </div>
-  
-      <div className="chat-messages">
-  {loading ? (
-    <div className="loading-indicator">Loading messages...</div>
-  ) : (
-    messages.map((msg, idx) => (
-      <div
-        key={idx}
-        className={`message ${
-          msg.senderId === currentUser?._id ? "you" : "other"
-        }`}
-      >
-        <div className="message-header">
-          <strong>{msg.senderName}</strong>{" "}
-          <span className="message-time">{formatTime(msg.timestamp)}</span>
+    <>
+      <div className="chat-container">
+        <div className="chat-header">
+          Your conversation with {otherName ? otherName : "other user"}
         </div>
-        <div className="message-content">{msg.content}</div>
+  
+        <div className="chat-messages">
+          {loading ? (
+            <div className="loading-indicator">Loading messages...</div>
+          ) : (
+            messages.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`message ${
+                  msg.senderId === currentUser?._id ? "you" : "other"
+                }`}
+              >
+                <div className="message-header">
+                  <strong>{msg.senderName}</strong>{" "}
+                  <span className="message-time">{formatTime(msg.timestamp)}</span>
+                </div>
+                <div className="message-content">{msg.content}</div>
+              </div>
+            ))
+          )}
+          <div ref={chatEndRef} />
+        </div>
+  
+        {isTyping && (
+          <div className="typing-indicator">
+            <span>{isTyping} is typing</span>
+            <span className="dot"></span>
+            <span className="dot"></span>
+            <span className="dot"></span>
+          </div>
+        )}
+  
+        {chatStatus?.isActive ? (
+          <form
+            className="chat-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSend();
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Type your message..."
+              value={input}
+              onChange={handleInputChange}
+            />
+            <button type="submit">Send</button>
+          </form>
+        ) : (
+          <div className="unlike-warning">
+          {chatStatus?.unlikedBy === currentUser?._id
+            ? "You’ve unliked this user. You can’t chat with them until you like them again."
+            : `${otherName || "This user"} has unliked you. You can’t chat with them until they like you back.`}
+        </div>
+        )}
       </div>
-    ))
-  )}
-  <div ref={chatEndRef} />
-</div>
-
-      {isTyping && (
-  <div className="typing-indicator">
-    <span>{isTyping} is typing</span>
-    <span className="dot"></span>
-    <span className="dot"></span>
-    <span className="dot"></span>
-  </div>
-)}
-
-      <form
-        className="chat-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleSend();
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Type your message..."
-          value={input}
-          onChange={handleInputChange}
-        />
-        <button type="submit">Send</button>
-      </form>
-    </div>
     </>
   );
+  
 };
 
 export default Chat;

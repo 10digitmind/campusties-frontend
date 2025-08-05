@@ -1,0 +1,36 @@
+.chat-list {
+    background: white;
+    color: black;
+    padding: 20px;
+  }
+  
+  .chat-item:hover {
+    background-color: #f9f3e6; /* light gold tint */
+  }
+  
+  .chat-item strong {
+    color: gold;
+  }
+  .chat-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 450px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    padding: 16px;
+    overflow-y: auto;
+  }
+  
+  .close-btn {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    float: right;
+    margin-bottom: 10px;
+  }
+  
