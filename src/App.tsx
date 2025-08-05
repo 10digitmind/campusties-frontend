@@ -30,6 +30,7 @@ import Matches from './component/Matches';
 import { UserData } from './component/AppTypes/User';
 import Chat from './component/Chat';
 import Message from './component/Messages';
+import WaitingList from './component/WaitingList';
 
 
 
@@ -74,7 +75,8 @@ const [localUsers, setLocalUsers] = useState<UserData[]>([]);
       <Routes>
         {/* Splash route (no header/footer) */}
         <Route path="/" element={<SplashScreen />} />
-
+        <Route path="/waitinglist" element={<WaitingList />} />
+        
         {/* All other routes (with Header & Footer) */}
         <Route element={<MainLayout />}>
           <Route path="/home" element={<Home />} />
